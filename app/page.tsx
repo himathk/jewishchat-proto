@@ -4,6 +4,8 @@ import { Hero } from "@/components/hero/Hero";
 import { SearchDock } from "@/components/hero/SearchDock";
 import { StatBand } from "@/components/sections/StatBand";
 import { CategoryLattice } from "@/components/sections/CategoryLattice";
+import { TrendingGroups } from "@/components/sections/TrendingGroups";
+import { RecentGroups } from "@/components/sections/RecentGroups";
 
 export default function Home() {
   return (
@@ -16,6 +18,8 @@ export default function Home() {
         <Hero />
         <StatBand />
         <CategoryLattice />
+        <TrendingGroups />
+        <RecentGroups />
       </main>
     </SearchProvider>
   );
