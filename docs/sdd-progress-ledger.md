@@ -69,3 +69,53 @@ Task 5: complete (commits ff4bd75..a64f95d, approved; 1 Important fix applied)
       confidence > 1 would render past 100%. No caller passes out-of-range today.
     * Button drops ...rest on the <Link> branch, so href + onClick silently
       ignores the handler.
+Task 6: complete (commits a64f95d..a57073c, approved after 1 Important fix)
+  - Header, SearchField, Suggestions, QueryChips, Logo, and the morphing
+    SearchDock. tsc 0, build green, lint clean.
+  - Reviewer confirmed the morph's core is sound: both slot rects measured LIVE
+    inside apply() via getBoundingClientRect (not cached at mount), and teardown
+    kills the ScrollTrigger plus reverts the matchMedia context.
+  - FIX (Important): neither SearchDock nor Header had a prefers-reduced-motion
+    branch — the scrubbed fixed-element tween ran regardless of the OS setting.
+    Reviewer labeled it "plan-mandated"; controller overruled that label because
+    the plan contradicts ITSELF here (Global Constraints require the branch, only
+    the snippet omits it). Same adjudication as Task 4's SmoothScroll bare-`if`.
+    No user escalation needed. Fixed in a57073c via gsap.matchMedia() object
+    conditions: dock uses {isDesktop, reduced} and the reduced branch snaps to
+    the correct slot instead of scrubbing; Header zeroes its 500ms CSS transition
+    duration and restores it on teardown. Plan snippets updated to match.
+  - Controller verified the fix diff directly (live measurement preserved,
+    teardown preserved, reduced branch is a real variant not a degenerate copy)
+    rather than spending a full re-review dispatch on a narrow contained fix.
+  - Controller resolved reviewer ⚠️: SmoothScroll is NOT yet mounted — app/layout.tsx
+    is still the Task 1 scaffold. So the document.fonts.ready -> ScrollTrigger.refresh()
+    path that re-measures the dock after Bricolage/Geist load only goes live at
+    Task 8. NOT a Task 6 gap. => TASK 8 ACCEPTANCE CHECK: confirm layout.tsx
+    mounts SmoothScroll, or the dock will sit on stale pre-font-load geometry.
+  - MINOR carried to final review:
+    * Suggestions.tsx role="listbox" without role="option" on the rows.
+    * ctx.conditions is cast rather than narrowed in both components; gsap types
+      it optional, so a destructure would throw if it were ever undefined.
+
+## PROCESS CHANGE (user directive, mid-session)
+User is credit-constrained and needs a working prototype this session. From
+Task 7 on: NO per-task reviewer dispatches. Tasks are batched per implementer
+dispatch and verified by tsc + build + lint + headless-Chrome screenshots that
+the implementer reads itself. Ledger entries are one-liners. The accumulated
+Minor findings above still stand for the final review if one is ever run.
+
+Task 7: complete (61e1a26) — ConstellationField + Constellation, R3F canvas.
+Task 8: complete (be4ef7e) — Hero + StatBand + real app/page.tsx; SmoothScroll
+  now mounted in layout.tsx (was the Task 6 acceptance check — resolved).
+  Controller confirmed by reading task8-desktop.png: header, logo, constellation,
+  Bricolage headline w/ green accent, search field, chips, stat line all render.
+  - Implementer added an eslint-disable for react-hooks/immutability in
+    ConstellationField.tsx (intentional in-place buffer mutation). Allowed: the
+    constraint bans `any` and @ts-expect-error, not this. Flag if revisited.
+  - Implementer changed the mobile header "Add" to icon-only: original fit
+    390.000px exactly with overflow-x:hidden, so any font-metric variance pushed
+    the hamburger off-screen. Reasonable fix, not in the plan.
+  - UNRESOLVED: implementer reports the headless-Chrome CLI renders mobile
+    captures narrower than the requested 390px on this machine, so
+    task8-mobile.png shows truncation it claims is a capture artifact, not an
+    app bug. Cross-checked via CDP + getBoundingClientRect. VERIFY AT TASK 14.
