@@ -1616,7 +1616,7 @@ type Size = "sm" | "md" | "lg";
 
 const VARIANTS: Record<Variant, string> = {
   primary:
-    "bg-brand-green text-white shadow-[0_1px_2px_rgba(18,33,30,0.10),0_8px_24px_-8px_rgba(30,151,131,0.55)] hover:bg-brand-deep",
+    "bg-brand-green text-white shadow-[0_1px_2px_color-mix(in_oklab,var(--color-ink-1)_10%,transparent),0_8px_24px_-8px_color-mix(in_oklab,var(--color-brand-green)_55%,transparent)] hover:bg-brand-deep",
   secondary:
     "bg-surface-card text-ink-1 border border-surface-line-strong hover:border-brand-green/50 hover:text-brand-deep",
   ghost: "text-ink-2 hover:text-brand-deep hover:bg-brand-soft",
@@ -2020,7 +2020,7 @@ export function GroupCard({
       data-href={`/${category?.slug ?? "group"}/${group.slug}`}
       data-reveal
       className={cn(
-        "group border-surface-line bg-surface-card hover:border-brand-green/45 relative flex flex-col rounded-[22px] border p-5 transition-all duration-500 ease-[var(--ease-out-expo)] hover:-translate-y-1 hover:shadow-[0_18px_40px_-24px_rgba(18,33,30,0.35)]",
+        "group border-surface-line bg-surface-card hover:border-brand-green/45 relative flex flex-col rounded-[22px] border p-5 transition-all duration-500 ease-[var(--ease-out-expo)] hover:-translate-y-1 hover:shadow-[0_18px_40px_-24px_color-mix(in_oklab,var(--color-ink-1)_35%,transparent)]",
         className,
       )}
     >
@@ -2270,7 +2270,7 @@ export function Suggestions() {
   return (
     <div
       role="listbox"
-      className="border-surface-line bg-surface-card absolute top-[calc(100%+10px)] right-0 left-0 z-50 overflow-hidden rounded-[22px] border shadow-[0_28px_70px_-30px_rgba(18,33,30,0.45)]"
+      className="border-surface-line bg-surface-card absolute top-[calc(100%+10px)] right-0 left-0 z-50 overflow-hidden rounded-[22px] border shadow-[0_28px_70px_-30px_color-mix(in_oklab,var(--color-ink-1)_45%,transparent)]"
     >
       {suggestions.length === 0 ? (
         <div className="text-ink-3 flex items-center gap-3 px-5 py-6 text-sm">
@@ -2378,7 +2378,7 @@ export function SearchDock() {
           height: a.height + (b.height - a.height) * p,
           borderRadius: 9999,
           // Big drop shadow in the hero, none once it sits in the header bar.
-          boxShadow: `0 ${20 * lift}px ${60 * lift}px -30px rgba(18,33,30,${0.45 * lift})`,
+          boxShadow: `0 ${20 * lift}px ${60 * lift}px -30px color-mix(in oklab, var(--color-ink-1) ${45 * lift}%, transparent)`,
         });
         dock.style.setProperty("--dock-progress", p.toFixed(4));
       };
@@ -4203,7 +4203,7 @@ export function CookieConsent() {
       role="dialog"
       aria-live="polite"
       aria-label="Cookie consent"
-      className="border-surface-line bg-surface-card fixed right-4 bottom-4 left-4 z-[60] rounded-[22px] border p-5 shadow-[0_28px_70px_-28px_rgba(18,33,30,0.5)] sm:right-6 sm:bottom-6 sm:left-auto sm:max-w-[26rem]"
+      className="border-surface-line bg-surface-card fixed right-4 bottom-4 left-4 z-[60] rounded-[22px] border p-5 shadow-[0_28px_70px_-28px_color-mix(in_oklab,var(--color-ink-1)_50%,transparent)] sm:right-6 sm:bottom-6 sm:left-auto sm:max-w-[26rem]"
     >
       <span className="bg-brand-soft text-brand-deep mb-4 inline-flex size-10 items-center justify-center rounded-[12px]">
         <Cookie size={19} strokeWidth={1.8} />

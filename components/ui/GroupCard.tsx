@@ -25,7 +25,7 @@ export function GroupCard({
       data-href={`/${category?.slug ?? "group"}/${group.slug}`}
       data-reveal
       className={cn(
-        "group border-surface-line bg-surface-card hover:border-brand-green/45 relative flex flex-col rounded-[22px] border p-5 transition-all duration-500 ease-[var(--ease-out-expo)] hover:-translate-y-1 hover:shadow-[0_18px_40px_-24px_rgba(18,33,30,0.35)]",
+        "group border-surface-line bg-surface-card hover:border-brand-green/45 relative flex flex-col rounded-[22px] border p-5 transition-all duration-500 ease-[var(--ease-out-expo)] hover:-translate-y-1 hover:shadow-[0_18px_40px_-24px_color-mix(in_oklab,var(--color-ink-1)_35%,transparent)]",
         className,
       )}
     >

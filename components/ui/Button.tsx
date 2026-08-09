@@ -6,7 +6,7 @@ type Size = "sm" | "md" | "lg";
 
 const VARIANTS: Record<Variant, string> = {
   primary:
-    "bg-brand-green text-white shadow-[0_1px_2px_rgba(18,33,30,0.10),0_8px_24px_-8px_rgba(30,151,131,0.55)] hover:bg-brand-deep",
+    "bg-brand-green text-white shadow-[0_1px_2px_color-mix(in_oklab,var(--color-ink-1)_10%,transparent),0_8px_24px_-8px_color-mix(in_oklab,var(--color-brand-green)_55%,transparent)] hover:bg-brand-deep",
   secondary:
     "bg-surface-card text-ink-1 border border-surface-line-strong hover:border-brand-green/50 hover:text-brand-deep",
   ghost: "text-ink-2 hover:text-brand-deep hover:bg-brand-soft",
