@@ -137,3 +137,28 @@ Task 12: complete (91805d0) — AddGroupBand + Faq + Footer.
     without a real scroll. Force reveals to final state (reduced-motion
     emulation or scripted scrolling) or the page will look empty and you will
     think it is broken when it is not.
+
+Task 13: complete (b318d65) — CookieConsent + JSON-LD + metadata. JSON-LD
+         validated by JSON.parse on the served HTML: 3 objects (WebSite,
+         ItemList, ItemList).
+Task 14: complete (d02fce3) — reduced-motion backstop + 3-breakpoint pass.
+  - Reduced-motion audit across all 12 motion files found one real violation:
+    CookieConsent.tsx used a bare window.matchMedia().matches instead of
+    gsap.matchMedia(). Fixed. This is the THIRD time this exact constraint was
+    violated on this project (Tasks 4, 6, 13) — it is the plan's most-missed rule.
+  - MOBILE CAPTURE VERDICT (was open since Task 8): capture artifact, NOT an app
+    bug. The plan's documented `chrome --headless --screenshot` recipe corrupts
+    once page height exceeds ~8192px — a rasterizer texture-tile limit,
+    independent of width. Replaced with a CDP script
+    (Emulation.setDeviceMetricsOverride + Page.captureScreenshot with
+    captureBeyondViewport, chunked under the limit, stitched). If anyone revives
+    the CLI recipe for a full-page shot, they will hit this again.
+  - Controller confirmed by reading final-desktop.png: all ten sections render
+    end to end. HowItWorks appears vertically stacked in the capture because
+    reduced-motion was emulated to force reveals — that is the fallback, not
+    the pinned horizontal path.
+
+## STATUS: all 14 tasks complete. tsc 0, build green, lint clean, 11/11 tests.
+Final whole-branch review was NOT run — deliberately skipped under the user's
+mid-session credit directive. The Minor findings above have never been triaged;
+they are the agenda if a final review is ever run.
