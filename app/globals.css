@@ -1,26 +1,111 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* Typography — Bricolage Grotesque display, Geist body */
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+
+  /* Brand — only --color-brand-green is authoritative (#1E9783) */
+  --color-brand-green: #1e9783;
+  --color-brand-deep: #0e6e5c;
+  --color-brand-soft: #e9f2ef;
+  --color-brand-softer: #f1f8f5;
+
+  /* Ink */
+  --color-ink-1: #12211e;
+  --color-ink-2: #3a4a45;
+  --color-ink-3: #75857f;
+  --color-ink-4: #9eada7;
+  --color-ink-on-gradient: #0e1a18;
+
+  /* Surface — --color-surface-bg is authoritative (#F6F6F4) */
+  --color-surface-bg: #f6f6f4;
+  --color-surface-card: #ffffff;
+  --color-surface-line: #e9e9e7;
+  --color-surface-line-strong: #dadad8;
+
+  /* State */
+  --color-state-success: #1e9783;
+  --color-state-error: #c24a4e;
+  --color-state-warning: #c0902a;
+  --color-state-info: #4e7fc6;
+
+  --color-state-bg-success: #eaf7f3;
+  --color-state-bg-error: #fbe1e4;
+  --color-state-bg-warning: #fbf0d6;
+  --color-state-bg-info: #e7edfb;
+
+  /* Motion */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quint: cubic-bezier(0.83, 0, 0.17, 1);
+
+  /* Layout — the seven-column motif */
+  --spacing-gutter: 1.5rem;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@layer base {
+  html {
+    background-color: var(--color-surface-bg);
+    color: var(--color-ink-1);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  body {
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: var(--color-brand-green);
+    color: #ffffff;
+  }
+
+  /* Lenis */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  /* Display type — Bricolage variable axes */
+  .font-display {
+    font-family: var(--font-display);
+    font-variation-settings: "wdth" 100, "opsz" 48;
+    letter-spacing: -0.03em;
+  }
+  .font-display-tight {
+    font-family: var(--font-display);
+    font-variation-settings: "wdth" 92, "opsz" 96;
+    letter-spacing: -0.045em;
+  }
+
+  /* The seven-column motif: content grid used by every section */
+  .grid-seven {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: var(--spacing-gutter);
+  }
+
+  /* Triangular lattice, tiled as a background */
+  .lattice-bg {
+    background-image:
+      linear-gradient(30deg, color-mix(in oklab, var(--color-brand-green) 7%, transparent) 1px, transparent 1px),
+      linear-gradient(150deg, color-mix(in oklab, var(--color-brand-green) 7%, transparent) 1px, transparent 1px),
+      linear-gradient(to right, color-mix(in oklab, var(--color-brand-green) 5%, transparent) 1px, transparent 1px);
+    background-size: 56px 97px, 56px 97px, 56px 97px;
+  }
+
+  /* Clip-mask used by SplitText line reveals */
+  .reveal-mask {
+    clip-path: inset(0 0 100% 0);
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
 }
