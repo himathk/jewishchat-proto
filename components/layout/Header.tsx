@@ -19,15 +19,38 @@ export function Header() {
     const el = ref.current;
     if (!el) return;
 
-    // Active from 40px of scroll to the bottom of the document.
-    const st = ScrollTrigger.create({
-      trigger: `#${HERO_SECTION_ID}`,
-      start: "top top-=40",
-      end: "max",
-      onToggle: (self) => el.classList.toggle("is-stuck", self.isActive),
-    });
+    const mm = gsap.matchMedia();
 
-    return () => st.kill();
+    mm.add(
+      {
+        motion: "(prefers-reduced-motion: no-preference)",
+        reduced: "(prefers-reduced-motion: reduce)",
+      },
+      (ctx) => {
+        const { reduced } = ctx.conditions as { motion: boolean; reduced: boolean };
+
+        // The backdrop-blur/border fade is a 500ms CSS transition driven by the
+        // is-stuck class below; skip it for reduced-motion so the header still
+        // reflects the right state for the scroll position, it just doesn't
+        // animate into it.
+        el.style.transitionDuration = reduced ? "0ms" : "";
+
+        // Active from 40px of scroll to the bottom of the document.
+        const st = ScrollTrigger.create({
+          trigger: `#${HERO_SECTION_ID}`,
+          start: "top top-=40",
+          end: "max",
+          onToggle: (self) => el.classList.toggle("is-stuck", self.isActive),
+        });
+
+        return () => {
+          st.kill();
+          el.style.transitionDuration = "";
+        };
+      },
+    );
+
+    return () => mm.revert();
   }, []);
 
   return (

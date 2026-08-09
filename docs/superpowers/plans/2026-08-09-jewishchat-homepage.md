@@ -2359,43 +2359,73 @@ export function SearchDock() {
 
     const mm = gsap.matchMedia();
 
-    mm.add("(min-width: 1024px)", () => {
-      const heroSlot = document.getElementById(HERO_SLOT_ID);
-      const headerSlot = document.getElementById(HEADER_SLOT_ID);
-      const hero = document.getElementById(HERO_SECTION_ID);
-      if (!heroSlot || !headerSlot || !hero) return;
+    mm.add(
+      {
+        isDesktop: "(min-width: 1024px)",
+        reduced: "(prefers-reduced-motion: reduce)",
+      },
+      (ctx) => {
+        const { isDesktop, reduced } = ctx.conditions as { isDesktop: boolean; reduced: boolean };
+        if (!isDesktop) return;
 
-      // Interpolate the fixed dock between the two slots' live viewport rects.
-      // Measuring both every frame means resize needs no cached geometry.
-      const apply = (p: number) => {
-        const a = heroSlot.getBoundingClientRect();
-        const b = headerSlot.getBoundingClientRect();
-        const lift = 1 - p;
-        gsap.set(dock, {
-          left: a.left + (b.left - a.left) * p,
-          top: a.top + (b.top - a.top) * p,
-          width: a.width + (b.width - a.width) * p,
-          height: a.height + (b.height - a.height) * p,
-          borderRadius: 9999,
-          // Big drop shadow in the hero, none once it sits in the header bar.
-          boxShadow: `0 ${20 * lift}px ${60 * lift}px -30px color-mix(in oklab, var(--color-ink-1) ${45 * lift}%, transparent)`,
+        const heroSlot = document.getElementById(HERO_SLOT_ID);
+        const headerSlot = document.getElementById(HEADER_SLOT_ID);
+        const hero = document.getElementById(HERO_SECTION_ID);
+        if (!heroSlot || !headerSlot || !hero) return;
+
+        // Interpolate the fixed dock between the two slots' live viewport rects.
+        // Measuring both every frame means resize needs no cached geometry.
+        const apply = (p: number) => {
+          const a = heroSlot.getBoundingClientRect();
+          const b = headerSlot.getBoundingClientRect();
+          const lift = 1 - p;
+          gsap.set(dock, {
+            left: a.left + (b.left - a.left) * p,
+            top: a.top + (b.top - a.top) * p,
+            width: a.width + (b.width - a.width) * p,
+            height: a.height + (b.height - a.height) * p,
+            borderRadius: 9999,
+            // Big drop shadow in the hero, none once it sits in the header bar.
+            boxShadow: `0 ${20 * lift}px ${60 * lift}px -30px color-mix(in oklab, var(--color-ink-1) ${45 * lift}%, transparent)`,
+          });
+          dock.style.setProperty("--dock-progress", p.toFixed(4));
+        };
+
+        if (reduced) {
+          // No scrubbed interpolation for reduced-motion: the dock still ends
+          // up in the right slot for the current scroll position, it just
+          // snaps there instead of resizing and moving continuously as the
+          // page scrolls. Both rects are still measured live, so it self-
+          // corrects on resize the same as the full-motion branch.
+          const snap = (self: ScrollTrigger) => apply(self.progress < 1 ? 0 : 1);
+
+          const st = ScrollTrigger.create({
+            trigger: hero,
+            start: "top top",
+            end: "bottom top+=120",
+            onUpdate: snap,
+            onRefresh: snap,
+          });
+
+          apply(st.progress < 1 ? 0 : 1);
+
+          return () => st.kill();
+        }
+
+        const st = ScrollTrigger.create({
+          trigger: hero,
+          start: "top top",
+          end: "bottom top+=120",
+          scrub: true,
+          onUpdate: (self) => apply(self.progress),
+          onRefresh: (self) => apply(self.progress),
         });
-        dock.style.setProperty("--dock-progress", p.toFixed(4));
-      };
 
-      const st = ScrollTrigger.create({
-        trigger: hero,
-        start: "top top",
-        end: "bottom top+=120",
-        scrub: true,
-        onUpdate: (self) => apply(self.progress),
-        onRefresh: (self) => apply(self.progress),
-      });
+        apply(0);
 
-      apply(0);
-
-      return () => st.kill();
-    });
+        return () => st.kill();
+      },
+    );
 
     return () => mm.revert();
   }, []);
@@ -2487,15 +2517,38 @@ export function Header() {
     const el = ref.current;
     if (!el) return;
 
-    // Active from 40px of scroll to the bottom of the document.
-    const st = ScrollTrigger.create({
-      trigger: `#${HERO_SECTION_ID}`,
-      start: "top top-=40",
-      end: "max",
-      onToggle: (self) => el.classList.toggle("is-stuck", self.isActive),
-    });
+    const mm = gsap.matchMedia();
 
-    return () => st.kill();
+    mm.add(
+      {
+        motion: "(prefers-reduced-motion: no-preference)",
+        reduced: "(prefers-reduced-motion: reduce)",
+      },
+      (ctx) => {
+        const { reduced } = ctx.conditions as { motion: boolean; reduced: boolean };
+
+        // The backdrop-blur/border fade is a 500ms CSS transition driven by the
+        // is-stuck class below; skip it for reduced-motion so the header still
+        // reflects the right state for the scroll position, it just doesn't
+        // animate into it.
+        el.style.transitionDuration = reduced ? "0ms" : "";
+
+        // Active from 40px of scroll to the bottom of the document.
+        const st = ScrollTrigger.create({
+          trigger: `#${HERO_SECTION_ID}`,
+          start: "top top-=40",
+          end: "max",
+          onToggle: (self) => el.classList.toggle("is-stuck", self.isActive),
+        });
+
+        return () => {
+          st.kill();
+          el.style.transitionDuration = "";
+        };
+      },
+    );
+
+    return () => mm.revert();
   }, []);
 
   return (
