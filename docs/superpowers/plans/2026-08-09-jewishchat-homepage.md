@@ -21,6 +21,13 @@
 - **Every animation must have a `prefers-reduced-motion` branch** registered inside `gsap.matchMedia()`, not an `if` statement.
 - **No `any` types.** No `@ts-expect-error`. `npx tsc --noEmit` must exit 0 at the end of every task.
 - **Commit after every task** with a `feat:` or `chore:` prefixed message.
+- **Visual verification uses headless Chrome, not the browser screenshot tool.** The in-app Browser pane does not composite frames in this environment, so `computer{action:"screenshot"}` times out. Capture real pixels with the installed Chrome instead, then read the PNG:
+
+  ```bash
+  "/c/Program Files/Google/Chrome/Application/chrome.exe" --headless --disable-gpu --hide-scrollbars --virtual-time-budget=8000 --window-size=1440,2400 --screenshot="D:\Work\Jewishchat\Jewishchat\docs\screenshots\NAME.png" http://localhost:3000
+  ```
+
+  `--virtual-time-budget` lets fonts, GSAP intro timelines, and the WebGL canvas settle before the frame is taken. Raise `--window-size` height to capture more of the page; scroll-triggered sections below the fold need a taller window or a scripted scroll. Checking computed styles is not a substitute — it confirms CSS parsed, not that anything is visible.
 
 ---
 
@@ -90,11 +97,13 @@ The directory `D:\Work\Jewishchat\Jewishchat` already exists and contains only `
 
 Flag notes, verified against `create-next-app@16.3.0 --help`: there is **no** `--turbopack` flag (Turbopack is the Next 16 default), the skip-install flag is `--skip-install` not `--no-install`, and `--src-dir` is opt-in so it is simply omitted.
 
+Scaffolding into `.` directly **fails**: `create-next-app` derives the package name from the directory name, and `Jewishchat` has a capital letter, which npm rejects as an invalid package name. There is no flag to override the derived name. Scaffold into a temporary lowercase directory and move the files across:
+
 ```bash
-cd "D:/Work/Jewishchat/Jewishchat" && npx --yes create-next-app@16.3.0 . --typescript --tailwind --app --eslint --import-alias "@/*" --skip-install --disable-git --yes
+cd "D:/Work/Jewishchat" && npx --yes create-next-app@16.3.0 jc-scaffold --typescript --tailwind --app --eslint --import-alias "@/*" --skip-install --disable-git --yes && (cd jc-scaffold && tar cf - .) | (cd Jewishchat && tar xf -) && rm -rf jc-scaffold
 ```
 
-Expected: files created, no `node_modules` yet.
+Expected: `D:/Work/Jewishchat/Jewishchat` now holds `app/`, `package.json` (with `"name": "jewishchat"`), `tsconfig.json`, `postcss.config.mjs`, and `eslint.config.mjs` alongside the pre-existing `docs/`. No `node_modules` yet.
 
 - [ ] **Step 2: Confirm the scaffold is not inside `src/`**
 
@@ -224,13 +233,27 @@ Replace the entire contents of `app/globals.css`:
     gap: var(--spacing-gutter);
   }
 
-  /* Triangular lattice, tiled as a background */
+  /* Triangular lattice: two 60° diagonals crossed with horizontals.
+     Must be repeating-linear-gradient — a plain linear-gradient with a 1px
+     colour stop draws ONE sliver along the gradient axis, not a repeating
+     rule, so the diagonals vanish and only the axis-aligned lines survive. */
   .lattice-bg {
     background-image:
-      linear-gradient(30deg, color-mix(in oklab, var(--color-brand-green) 7%, transparent) 1px, transparent 1px),
-      linear-gradient(150deg, color-mix(in oklab, var(--color-brand-green) 7%, transparent) 1px, transparent 1px),
-      linear-gradient(to right, color-mix(in oklab, var(--color-brand-green) 5%, transparent) 1px, transparent 1px);
-    background-size: 56px 97px, 56px 97px, 56px 97px;
+      repeating-linear-gradient(
+        60deg,
+        transparent 0 55px,
+        color-mix(in oklab, var(--color-brand-green) 9%, transparent) 55px 56px
+      ),
+      repeating-linear-gradient(
+        -60deg,
+        transparent 0 55px,
+        color-mix(in oklab, var(--color-brand-green) 9%, transparent) 55px 56px
+      ),
+      repeating-linear-gradient(
+        0deg,
+        transparent 0 47px,
+        color-mix(in oklab, var(--color-brand-green) 7%, transparent) 47px 48px
+      );
   }
 
   /* Clip-mask used by SplitText line reveals */
@@ -4403,9 +4426,13 @@ In the browser devtools, emulate `prefers-reduced-motion: reduce`, reload, and c
 
 - [ ] **Step 3: Verify the three breakpoints**
 
-Check 390×844, 768×1024, and 1440×900. At each: no horizontal scrollbar on `<body>`, no text clipped or overlapping, all tap targets at least 40px, and the header does not overlap hero copy.
+Capture each width with headless Chrome (see Global Constraints for why the browser tool is not used), then read each PNG:
 
-Take a full-page screenshot at each width and save to `docs/screenshots/home-{mobile,tablet,desktop}.png`.
+```bash
+cd "D:/Work/Jewishchat/Jewishchat" && for s in "mobile 390 2600" "tablet 768 2600" "desktop 1440 2600"; do set -- $s; "/c/Program Files/Google/Chrome/Application/chrome.exe" --headless --disable-gpu --hide-scrollbars --virtual-time-budget=8000 --window-size=$2,$3 --screenshot="D:\Work\Jewishchat\Jewishchat\docs\screenshots\home-$1.png" http://localhost:3000; done
+```
+
+At each width confirm: no horizontal overflow, no text clipped or overlapping, all tap targets at least 40px, and the header does not overlap hero copy.
 
 - [ ] **Step 4: Verify the search flow once more, at desktop width**
 
