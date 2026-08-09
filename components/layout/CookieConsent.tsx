@@ -11,6 +11,9 @@ const STORAGE_KEY = "jc-cookie-consent";
 export function CookieConsent() {
   const [visible, setVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  // Live-updated by the gsap.matchMedia() context below so the click handler
+  // never needs its own bare `window.matchMedia(...).matches` check.
+  const reducedRef = useRef(false);
 
   // Read storage after mount only — reading during render would desync SSR.
   useEffect(() => {
@@ -22,27 +25,42 @@ export function CookieConsent() {
   useEffect(() => {
     registerGsap();
     const el = ref.current;
-    if (!visible || !el) return;
 
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      gsap.set(el, { opacity: 1, y: 0 });
-      return;
-    }
+    const mm = gsap.matchMedia();
 
-    const tween = gsap.fromTo(
-      el,
-      { opacity: 0, y: 28 },
-      { opacity: 1, y: 0, duration: 0.75, ease: "power3.out" },
+    mm.add(
+      {
+        motion: "(prefers-reduced-motion: no-preference)",
+        reduced: "(prefers-reduced-motion: reduce)",
+      },
+      (ctx) => {
+        const { reduced } = ctx.conditions as { motion: boolean; reduced: boolean };
+        reducedRef.current = reduced;
+        if (!visible || !el) return;
+
+        if (reduced) {
+          gsap.set(el, { opacity: 1, y: 0 });
+          return;
+        }
+
+        const tween = gsap.fromTo(
+          el,
+          { opacity: 0, y: 28 },
+          { opacity: 1, y: 0, duration: 0.75, ease: "power3.out" },
+        );
+        return () => {
+          tween.kill();
+        };
+      },
     );
-    return () => {
-      tween.kill();
-    };
+
+    return () => mm.revert();
   }, [visible]);
 
   const decide = (choice: "all" | "essential") => {
     window.localStorage.setItem(STORAGE_KEY, choice);
     const el = ref.current;
-    if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (!el || reducedRef.current) {
       setVisible(false);
       return;
     }
