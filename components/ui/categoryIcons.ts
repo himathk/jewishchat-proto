@@ -1,0 +1,30 @@
+import {
+  BookOpen,
+  Briefcase,
+  BriefcaseBusiness,
+  Building2,
+  HeartHandshake,
+  Landmark,
+  PartyPopper,
+  Plane,
+  Stethoscope,
+  Tags,
+  Users,
+  UtensilsCrossed,
+  type LucideIcon,
+} from "lucide-react";
+
+export const CATEGORY_ICONS: Record<string, LucideIcon> = {
+  BookOpen,
+  Briefcase,
+  BriefcaseBusiness,
+  Building2,
+  HeartHandshake,
+  Landmark,
+  PartyPopper,
+  Plane,
+  Stethoscope,
+  Tags,
+  Users,
+  UtensilsCrossed,
+};
