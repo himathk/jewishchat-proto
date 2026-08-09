@@ -6,6 +6,8 @@ import { StatBand } from "@/components/sections/StatBand";
 import { CategoryLattice } from "@/components/sections/CategoryLattice";
 import { TrendingGroups } from "@/components/sections/TrendingGroups";
 import { RecentGroups } from "@/components/sections/RecentGroups";
+import { HowItWorks } from "@/components/sections/HowItWorks";
+import { TrustSafety } from "@/components/sections/TrustSafety";
 
 export default function Home() {
   return (
@@ -20,6 +22,8 @@ export default function Home() {
         <CategoryLattice />
         <TrendingGroups />
         <RecentGroups />
+        <HowItWorks />
+        <TrustSafety />
       </main>
     </SearchProvider>
   );

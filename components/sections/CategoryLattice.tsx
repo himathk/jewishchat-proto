@@ -54,7 +54,7 @@ export function CategoryLattice() {
 
         <div
           ref={gridRef}
-          className="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:mt-20 lg:grid-cols-4 lg:[&>*:nth-child(4n+2)]:translate-y-8 lg:[&>*:nth-child(4n+4)]:translate-y-8"
+          className="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:mt-20 lg:grid-cols-4 lg:[&>*:nth-child(4n+2)]:top-8 lg:[&>*:nth-child(4n+4)]:top-8"
         >
           {CATEGORIES.map((category) => (
             <CategoryTile key={category.id} category={category} />
