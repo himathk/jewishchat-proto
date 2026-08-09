@@ -11,10 +11,25 @@ import { TrustSafety } from "@/components/sections/TrustSafety";
 import { AddGroupBand } from "@/components/sections/AddGroupBand";
 import { Faq } from "@/components/sections/Faq";
 import { Footer } from "@/components/layout/Footer";
+import {
+  buildCategoryListSchema,
+  buildItemListSchema,
+  buildWebsiteSchema,
+} from "@/lib/seo/schema";
 
 export default function Home() {
   return (
     <SearchProvider>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([
+            buildWebsiteSchema(),
+            buildCategoryListSchema(),
+            buildItemListSchema(),
+          ]),
+        }}
+      />
       <Header />
       {/* SearchDock is a root-level sibling on purpose: a transformed ancestor
           would become the containing block for its `position: fixed`. */}

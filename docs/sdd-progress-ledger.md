@@ -119,3 +119,21 @@ Task 8: complete (be4ef7e) — Hero + StatBand + real app/page.tsx; SmoothScroll
     captures narrower than the requested 390px on this machine, so
     task8-mobile.png shows truncation it claims is a capture artifact, not an
     app bug. Cross-checked via CDP + getBoundingClientRect. VERIFY AT TASK 14.
+
+Task 9:  complete (abcde7a) — CategoryLattice + location ticker.
+Task 10: complete (c7cc637) — TrendingGroups + RecentGroups.
+Task 11: complete (bcd00bf) — HowItWorks pinned horizontal track + TrustSafety.
+         Reduced-motion branch falls back to vertical stacking (verified), and
+         the pin re-engages/disengages cleanly across breakpoints.
+Task 12: complete (91805d0) — AddGroupBand + Faq + Footer.
+  - REAL BUG found and fixed during Task 11 verification: Task 9's hex-offset
+    grid used translate-y-8 on tiles 2/4, which useReveal silently erased —
+    the reveal tween animates the same `transform` property and leaves an
+    inline translate(0,0) behind on completion. Switched to top-8 (CategoryTile
+    root is already position:relative). This is the second bug on this project
+    that only surfaced by inspecting rendered output rather than source.
+  - NOTE for anyone re-verifying: a static headless capture shows ONLY the hero,
+    because every section below uses scroll-triggered reveals that never fire
+    without a real scroll. Force reveals to final state (reduced-motion
+    emulation or scripted scrolling) or the page will look empty and you will
+    think it is broken when it is not.
