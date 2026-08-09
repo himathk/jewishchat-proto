@@ -43,3 +43,29 @@ Task 4: complete (commits 068b493..6fedb22, approved on re-review after 2 Import
     Now useMemo'd on [results]. Plan doc updated for both (440fadd).
   - MINOR carried to final review: gsap.ticker.lagSmoothing(0) is a global never
     restored on teardown; fonts.ready refresh not cancelled on unmount.
+Task 5: complete (commits ff4bd75..a64f95d, approved; 1 Important fix applied)
+  - All 8 UI primitives built verbatim from brief; tsc 0, build green.
+  - Reviewer verified every Tailwind class resolves to a real @theme token or
+    utility in globals.css (the risk build/tsc cannot catch).
+  - USER DECISION (new, plan-wide): hand-copied rgba() shadow literals that
+    duplicate @theme colors violate the plan's own "one @theme block" constraint.
+    User chose FIX ALL FIVE plan-wide over "plan governs". Applied in a64f95d to
+    Button.tsx, GroupCard.tsx, and plan lines 1619/2023/2273/2381/4206, using the
+    color-mix(in oklab, var(--color-...) N%, transparent) pattern from .lattice-bg.
+    Underscore-escaping required inside Tailwind arbitrary values; line 2381 is a
+    JS template literal with computed alpha and uses real spaces. Controller
+    verified the emitted CSS actually contains the classes (a malformed arbitrary
+    value generates nothing and passes both tsc and build silently).
+  - Controller resolved reviewer ⚠️ #1: all 12 icon values in lib/data/categories.ts
+    match CATEGORY_ICONS keys exactly. Not a gap.
+  - Controller resolved reviewer ⚠️ #2: no task in the plan implements a
+    status-bar shim for data-href. Plan appendix line 4528 settles data-href as
+    documentation of intended URL, not a browser affordance. Falls under standing
+    decision (b), inert href="#" links. Recorded as Minor.
+  - MINOR carried to final review:
+    * Global Constraints prose claims data-href is "shown in the browser status
+      bar"; browsers do not surface data-* attributes. Wording overstates it.
+    * GroupCard confidence bar clamps only the lower bound (Math.max(6, ...));
+      confidence > 1 would render past 100%. No caller passes out-of-range today.
+    * Button drops ...rest on the <Link> branch, so href + onClick silently
+      ignores the handler.
