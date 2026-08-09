@@ -8,6 +8,9 @@ import { TrendingGroups } from "@/components/sections/TrendingGroups";
 import { RecentGroups } from "@/components/sections/RecentGroups";
 import { HowItWorks } from "@/components/sections/HowItWorks";
 import { TrustSafety } from "@/components/sections/TrustSafety";
+import { AddGroupBand } from "@/components/sections/AddGroupBand";
+import { Faq } from "@/components/sections/Faq";
+import { Footer } from "@/components/layout/Footer";
 
 export default function Home() {
   return (
@@ -24,7 +27,10 @@ export default function Home() {
         <RecentGroups />
         <HowItWorks />
         <TrustSafety />
+        <AddGroupBand />
+        <Faq />
       </main>
+      <Footer />
     </SearchProvider>
   );
 }
