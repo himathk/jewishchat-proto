@@ -1,5 +1,18 @@
 "use client";
 
+/**
+ * This module intentionally mutates typed-array buffers in place every frame
+ * (see the "use no memo" directive and the comment above `buffers` below) so
+ * the WebGL scene never reallocates while animating — the standard
+ * react-three-fiber pattern for driving `bufferAttribute`s imperatively.
+ * That is incompatible with the React Compiler diagnostic rules'
+ * pure-render assumptions, which is exactly what "use no memo" opts out of
+ * at the compiler level; the eslint-plugin-react-hooks compiler-diagnostic
+ * rules run independently of that directive and don't model this pattern,
+ * so they're disabled for this file rather than for the rule everywhere.
+ */
+/* eslint-disable react-hooks/immutability */
+
 import { useEffect, useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";

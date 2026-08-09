@@ -109,10 +109,20 @@ export function Header() {
           >
             <Search size={16} strokeWidth={1.9} />
           </a>
-          <Button href="/add-group" size="sm" className="px-3.5">
-            <Plus size={15} strokeWidth={2.3} />
-            Add
-          </Button>
+          {/* Icon-only (not the text+icon Button used on desktop): at 390px the
+              search + text-button + menu row fits with zero spare width once
+              webfonts swap in, so any fallback-font metric nudges the menu
+              button past the viewport edge — and body has overflow-x:hidden,
+              so there is no scrolling back to reach it. A fixed-width circular
+              icon button removes the font-width dependency entirely. */}
+          <Link
+            href="#"
+            data-href="/add-group"
+            aria-label="Add a group"
+            className="bg-brand-green hover:bg-brand-deep grid size-10 shrink-0 place-items-center rounded-full text-white transition-colors"
+          >
+            <Plus size={17} strokeWidth={2.2} />
+          </Link>
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
