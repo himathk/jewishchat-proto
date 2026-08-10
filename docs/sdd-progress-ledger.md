@@ -175,6 +175,21 @@ the geometric design language) and user chose the live-group-cluster option.
   NOTE: this is the fourth defect on this project caught only by looking at
   rendered pixels. The pattern is now unambiguous.
 
+## TOOLING: the in-app Browser pane cannot verify ANY animation
+Measured directly: `document.visibilityState === "hidden"`, `document.hidden
+=== true`, and requestAnimationFrame fires ZERO times in 500ms. GSAP's global
+timeline is therefore frozen at time 0 — `gsap.globalTimeline.time()` never
+advances. Consequences, all of which look exactly like app bugs:
+  - Any tween sits permanently at its from-state. `tl.progress(1)` still works,
+    which is how you tell a frozen ticker from a dead timeline.
+  - Components that unmount at the END of an exit animation never unmount
+    (CookieConsent's dismiss does nothing in the pane).
+  - Elements stay offset by their from-state transform, so getBoundingClientRect
+    geometry is wrong by exactly the tween's starting offset.
+This cost a long debugging detour chasing a phantom bug in ChatLauncher that
+did not exist. The pane is fine for DOM/state/geometry-at-rest checks; for
+anything motion-dependent use headless Chrome, which composites normally.
+
 ## STATUS: all 14 tasks complete. tsc 0, build green, lint clean, 11/11 tests.
 Final whole-branch review was NOT run — deliberately skipped under the user's
 mid-session credit directive. The Minor findings above have never been triaged;
