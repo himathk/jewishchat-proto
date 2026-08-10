@@ -324,26 +324,33 @@ export function ChatWindow() {
         <div
           ref={listRef}
           aria-live="polite"
-          className="no-scrollbar relative flex h-full min-h-0 flex-col gap-2.5 overflow-y-auto px-4 py-4"
+          className="no-scrollbar relative flex h-full min-h-0 flex-col overflow-y-auto px-4 py-4"
         >
-          {messages.length > 0 ? (
-            <div className="mx-auto">
-              <span className="bg-surface-line/70 text-ink-3 rounded-full px-2.5 py-1 text-[10.5px] font-medium tracking-wide">
-                Today
-              </span>
-            </div>
-          ) : null}
+          {/* `mt-auto` rather than `justify-end` on the scroll container —
+              flex-end plus overflow makes the overflowing top unreachable in
+              some browsers. This sits the transcript on the bottom edge, the
+              way a real chat does, so a short conversation doesn't leave the
+              window looking empty. */}
+          <div className="mt-auto flex flex-col gap-2.5">
+            {messages.length > 0 ? (
+              <div className="mx-auto">
+                <span className="bg-surface-line/70 text-ink-3 rounded-full px-2.5 py-1 text-[10.5px] font-medium tracking-wide">
+                  Today
+                </span>
+              </div>
+            ) : null}
 
-          {messages.map((message) => (
-            <Bubble
-              key={message.id}
-              message={message}
-              register={(el) => {
-                if (el) bubbleEls.current.set(message.id, el);
-                else bubbleEls.current.delete(message.id);
-              }}
-            />
-          ))}
+            {messages.map((message) => (
+              <Bubble
+                key={message.id}
+                message={message}
+                register={(el) => {
+                  if (el) bubbleEls.current.set(message.id, el);
+                  else bubbleEls.current.delete(message.id);
+                }}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </div>

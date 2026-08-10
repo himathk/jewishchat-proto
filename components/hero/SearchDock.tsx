@@ -44,7 +44,10 @@ export function SearchDock() {
             top: a.top + (b.top - a.top) * p,
             width: a.width + (b.width - a.width) * p,
             height: a.height + (b.height - a.height) * p,
-            borderRadius: 9999,
+            // Card corner in the hero, pill in the header. Browsers clamp the
+            // radius to half the height, so 40px reads as a full pill once the
+            // dock has collapsed to header height.
+            borderRadius: 26 + 14 * p,
             // Big drop shadow in the hero, none once it sits in the header bar.
             boxShadow: `0 ${20 * lift}px ${60 * lift}px -30px color-mix(in oklab, var(--color-ink-1) ${45 * lift}%, transparent)`,
           });
