@@ -2,6 +2,7 @@ import { SearchProvider } from "@/components/providers/SearchProvider";
 import { Header } from "@/components/layout/Header";
 import { Hero } from "@/components/hero/Hero";
 import { SearchDock } from "@/components/hero/SearchDock";
+import { ChatLauncher } from "@/components/hero/ChatLauncher";
 import { StatBand } from "@/components/sections/StatBand";
 import { CategoryLattice } from "@/components/sections/CategoryLattice";
 import { TrendingGroups } from "@/components/sections/TrendingGroups";
@@ -34,6 +35,9 @@ export default function Home() {
       {/* SearchDock is a root-level sibling on purpose: a transformed ancestor
           would become the containing block for its `position: fixed`. */}
       <SearchDock />
+      {/* Same reason as SearchDock: the mobile launcher is `position: fixed`
+          and must not sit under a transformed ancestor. */}
+      <ChatLauncher />
       <main>
         <Hero />
         <StatBand />
