@@ -324,7 +324,7 @@ export function ChatWindow() {
         <div
           ref={listRef}
           aria-live="polite"
-          className="relative flex h-full min-h-0 flex-col gap-2.5 overflow-y-auto px-4 py-4"
+          className="no-scrollbar relative flex h-full min-h-0 flex-col gap-2.5 overflow-y-auto px-4 py-4"
         >
           {messages.length > 0 ? (
             <div className="mx-auto">
@@ -364,18 +364,21 @@ function Bubble({
       ref={register}
       className={
         isUser
-          ? "bg-brand-green relative ml-auto max-w-[78%] rounded-[16px] rounded-tr-[4px] px-3.5 pb-4 pt-2.5 text-[12.5px] leading-snug text-white"
-          : "border-surface-line bg-surface-card relative mr-auto max-w-[82%] rounded-[16px] rounded-tl-[4px] border px-3.5 pb-4 pt-2.5 shadow-[0_2px_10px_-6px_color-mix(in_oklab,var(--color-ink-1)_30%,transparent)]"
+          ? "bg-brand-green relative ml-auto w-fit max-w-[78%] rounded-[16px] rounded-tr-[4px] px-3.5 py-2 text-[12.5px] leading-snug break-words text-white"
+          : "border-surface-line bg-surface-card relative mr-auto w-fit max-w-[82%] rounded-[16px] rounded-tl-[4px] border px-3.5 py-2 break-words shadow-[0_2px_10px_-6px_color-mix(in_oklab,var(--color-ink-1)_30%,transparent)]"
       }
     >
       {message.kind === "text" ? (
         <>
-          {isUser ? (
-            message.text
-          ) : (
-            <p className="text-ink-2 text-[12.5px] leading-snug">{message.text}</p>
-          )}
-          <BubbleMeta time={message.time} isUser={isUser} read={isUser} />
+          {/* Meta sits in normal flow, not absolute — an out-of-flow meta adds
+              no width, so a two-character message collapsed the bubble and the
+              timestamp wrapped on top of the text. */}
+          <div className="flex items-end gap-2">
+            <span className={isUser ? "min-w-0" : "text-ink-2 min-w-0 text-[12.5px] leading-snug"}>
+              {message.text}
+            </span>
+            <BubbleMeta time={message.time} isUser={isUser} read={isUser} />
+          </div>
         </>
       ) : null}
 
@@ -434,7 +437,9 @@ function Bubble({
             </Link>
           ) : null}
 
-          <BubbleMeta time={message.time} isUser={false} />
+          <div className="mt-1.5 flex justify-end">
+            <BubbleMeta time={message.time} isUser={false} />
+          </div>
         </>
       ) : null}
     </div>
@@ -446,8 +451,8 @@ function BubbleMeta({ time, isUser, read }: { time: string; isUser: boolean; rea
     <span
       className={
         isUser
-          ? "absolute bottom-1 right-2.5 flex items-center gap-0.5 text-[9px] leading-none text-white/70"
-          : "text-ink-4 absolute bottom-1 right-2.5 flex items-center gap-0.5 text-[9px] leading-none"
+          ? "flex shrink-0 translate-y-[1px] items-center gap-0.5 text-[9px] leading-none whitespace-nowrap text-white/70"
+          : "text-ink-4 flex shrink-0 translate-y-[1px] items-center gap-0.5 text-[9px] leading-none whitespace-nowrap"
       }
     >
       {time}

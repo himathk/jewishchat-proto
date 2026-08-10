@@ -83,6 +83,16 @@
 }
 
 @layer utilities {
+  /* Scrollable but with no visible scrollbar — the element still scrolls, and
+     GSAP can still tween its scrollTop. */
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
   /* Display type — Bricolage variable axes */
   .font-display {
     font-family: var(--font-display);
