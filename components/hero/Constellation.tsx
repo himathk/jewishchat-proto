@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { ConstellationField } from "./ConstellationField";
+import { GrainientField } from "./GrainientField";
 import { LatticeBackdrop } from "@/components/ui/LatticeBackdrop";
 import { gsap, registerGsap, useIsomorphicLayoutEffect } from "@/lib/motion/gsap";
 
@@ -61,10 +62,17 @@ export function Constellation() {
           frameloop={reduced ? "demand" : visible ? "always" : "never"}
           className="absolute inset-0"
         >
+          <GrainientField animated={!reduced} />
           <ConstellationField />
         </Canvas>
       ) : (
-        <LatticeBackdrop />
+        <>
+          {/* No WebGL below lg, so the field is a static approximation —
+              visually close, and free on the devices least able to afford a
+              continuously running shader. */}
+          <div className="grainient-static absolute inset-0" />
+          <LatticeBackdrop />
+        </>
       )}
     </div>
   );

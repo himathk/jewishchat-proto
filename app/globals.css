@@ -24,6 +24,13 @@
   --color-surface-line: #e9e9e7;
   --color-surface-line-strong: #dadad8;
 
+  /* Gradient field — the hero's drifting background. Read at runtime and
+     passed to the shader as uniforms, so these stay the single source of
+     truth rather than being duplicated as literals in GLSL. */
+  --color-field-cream: #fdf8f0;
+  --color-field-mint: #d3ebe2;
+  --color-field-periwinkle: #c6ccf2;
+
   /* State */
   --color-state-success: #1e9783;
   --color-state-error: #c24a4e;
@@ -91,6 +98,43 @@
   }
   .no-scrollbar::-webkit-scrollbar {
     display: none;
+  }
+
+  /* Static stand-in for the hero's gradient field, used wherever the shader
+     doesn't run (below lg). Same three tokens, same upper-left weighting,
+     same downward dissolve — no GPU cost. */
+  .grainient-static {
+    background:
+      radial-gradient(
+        62% 55% at 18% 12%,
+        color-mix(in oklab, var(--color-field-periwinkle) 55%, transparent) 0%,
+        transparent 70%
+      ),
+      radial-gradient(
+        70% 60% at 78% 30%,
+        color-mix(in oklab, var(--color-field-mint) 65%, transparent) 0%,
+        transparent 72%
+      ),
+      radial-gradient(
+        90% 70% at 40% 0%,
+        color-mix(in oklab, var(--color-field-cream) 90%, transparent) 0%,
+        transparent 80%
+      );
+    opacity: 0.55;
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      rgb(0 0 0) 0%,
+      rgb(0 0 0) 35%,
+      rgb(0 0 0 / 0.3) 70%,
+      rgb(0 0 0 / 0) 100%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      rgb(0 0 0) 0%,
+      rgb(0 0 0) 35%,
+      rgb(0 0 0 / 0.3) 70%,
+      rgb(0 0 0 / 0) 100%
+    );
   }
 
   /* Display type — Bricolage variable axes */
