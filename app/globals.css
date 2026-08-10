@@ -102,29 +102,6 @@
     display: none;
   }
 
-  /* Static stand-in for the site's gradient field, used wherever the shader
-     doesn't run (below lg). Same three tokens, same upper-left weighting —
-     no GPU cost. */
-  .grainient-static {
-    background:
-      radial-gradient(
-        62% 55% at 18% 12%,
-        color-mix(in oklab, var(--color-field-green) 55%, transparent) 0%,
-        transparent 70%
-      ),
-      radial-gradient(
-        70% 60% at 78% 30%,
-        color-mix(in oklab, var(--color-field-mint) 65%, transparent) 0%,
-        transparent 72%
-      ),
-      radial-gradient(
-        90% 70% at 40% 0%,
-        color-mix(in oklab, var(--color-field-cream) 90%, transparent) 0%,
-        transparent 80%
-      );
-    opacity: 0.55;
-  }
-
   /* Display type — Bricolage variable axes */
   .font-display {
     font-family: var(--font-display);
