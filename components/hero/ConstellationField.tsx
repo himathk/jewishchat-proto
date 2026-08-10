@@ -24,9 +24,9 @@ const NODE_COUNT = 150;
 const MAX_LINKS = 320;
 const REPEL_RADIUS = 2.4;
 
-const COLOR_IDLE = new THREE.Color("#9EADA7");
+const COLOR_IDLE = new THREE.Color("#6E9C90");
 const COLOR_ACTIVE = new THREE.Color("#1E9783");
-const LINE_IDLE = new THREE.Color("#CFE2DC");
+const LINE_IDLE = new THREE.Color("#9BC6BA");
 const LINE_ACTIVE = new THREE.Color("#1E9783");
 
 /** Deterministic PRNG so the layout is identical on every mount. */
@@ -193,7 +193,7 @@ export function ConstellationField() {
       pointColors[i * 3] = color.r;
       pointColors[i * 3 + 1] = color.g;
       pointColors[i * 3 + 2] = color.b;
-      pointSizes[i] = 5 + a * 11;
+      pointSizes[i] = 6.5 + a * 10.5;
     }
 
     // Rebuild line vertices from the live node positions.
@@ -239,7 +239,7 @@ export function ConstellationField() {
           />
           <bufferAttribute attach="attributes-color" args={[buffers.lineColors, 3]} />
         </bufferGeometry>
-        <lineBasicMaterial vertexColors transparent opacity={0.5} />
+        <lineBasicMaterial vertexColors transparent opacity={0.72} />
       </lineSegments>
 
       <points ref={pointsRef}>

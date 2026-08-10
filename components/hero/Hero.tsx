@@ -7,6 +7,7 @@ import { Constellation } from "./Constellation";
 import { SearchField } from "./SearchField";
 import { Suggestions } from "./Suggestions";
 import { QueryChips } from "./QueryChips";
+import { HeroGroupCluster } from "./HeroGroupCluster";
 import { HERO_SECTION_ID, HERO_SLOT_ID } from "./SearchDock";
 
 export function Hero() {
@@ -109,6 +110,8 @@ export function Hero() {
             Free to browse · No account needed to search · 3,961 groups across 46 cities
           </p>
         </div>
+
+        <HeroGroupCluster />
       </div>
 
       <a
