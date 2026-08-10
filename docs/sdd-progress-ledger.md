@@ -158,6 +158,23 @@ Task 14: complete (d02fce3) — reduced-motion backstop + 3-breakpoint pass.
     reduced-motion was emulated to force reveals — that is the fallback, not
     the pinned horizontal path.
 
+## Post-plan design fix (user feedback: "empty and lifeless", esp. hero)
+Diagnosis: Hero.tsx wrapped all content in max-w-4xl (896px) inside a
+max-w-[1400px] container, so the right ~500px was dead by construction, and the
+constellation was too low-contrast to read as anything but dust. Not a missing-
+photography problem. User asked about stock photos of people; advised against
+(inauthentic for this audience, implies endorsement that doesn't exist, fights
+the geometric design language) and user chose the live-group-cluster option.
+  8b3da25 — HeroGroupCluster + raised constellation contrast.
+  3af9051 — fix after controller read the pixels: v1 shipped a 3-card fan that
+    bled past the 1440px viewport edge and sliced two cards' text and badges;
+    titles were ellipsized. Replaced with a 2-card staggered column, near-zero
+    rotation, no overlap, full titles. Confidence bar dropped from floating
+    cards (it made active-query cards ~40px taller than idle, which was the
+    real root cause of the overlap).
+  NOTE: this is the fourth defect on this project caught only by looking at
+  rendered pixels. The pattern is now unambiguous.
+
 ## STATUS: all 14 tasks complete. tsc 0, build green, lint clean, 11/11 tests.
 Final whole-branch review was NOT run — deliberately skipped under the user's
 mid-session credit directive. The Minor findings above have never been triaged;
