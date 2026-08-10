@@ -7,7 +7,7 @@ import { Constellation } from "./Constellation";
 import { SearchField } from "./SearchField";
 import { Suggestions } from "./Suggestions";
 import { QueryChips } from "./QueryChips";
-import { HeroGroupCluster } from "./HeroGroupCluster";
+import { ChatWindow } from "./ChatWindow";
 import { HERO_SECTION_ID, HERO_SLOT_ID } from "./SearchDock";
 
 export function Hero() {
@@ -110,8 +110,20 @@ export function Hero() {
             Free to browse · No account needed to search · 3,961 groups across 46 cities
           </p>
         </div>
+      </div>
 
-        <HeroGroupCluster />
+      {/* Positioned against the section's own box (full viewport height),
+          not the text column above — that column is vertically centered by
+          the section's `justify-center` and its height varies with content,
+          which would make a nested absolute position drift. Anchored near
+          the top so a full-height window never reaches into the cookie
+          banner's bottom-right region on first load. */}
+      <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-full lg:flex">
+        <div className="mx-auto flex h-full w-full max-w-[1400px] items-start justify-end px-5 pt-[136px] md:px-8">
+          <div className="pointer-events-auto h-[420px] w-[360px]">
+            <ChatWindow />
+          </div>
+        </div>
       </div>
 
       <a
