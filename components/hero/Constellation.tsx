@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { ConstellationField } from "./ConstellationField";
-import { GrainientField } from "./GrainientField";
 import { LatticeBackdrop } from "@/components/ui/LatticeBackdrop";
 import { gsap, registerGsap, useIsomorphicLayoutEffect } from "@/lib/motion/gsap";
 
@@ -50,9 +49,10 @@ export function Constellation() {
 
   return (
     <div ref={hostRef} className="pointer-events-none absolute inset-0 overflow-hidden">
-      {/* Mint wash sitting under everything */}
-      <div className="from-brand-softer via-surface-bg to-surface-bg absolute inset-0 bg-gradient-to-b" />
-      <div className="bg-brand-soft/70 absolute top-[-18%] left-1/2 size-[52rem] -translate-x-1/2 rounded-full blur-[120px]" />
+      {/* The old opaque mint wash lived here. It was removed when the gradient
+          field moved to a site-wide fixed layer — being opaque, it painted
+          over the field for the whole height of the hero. */}
+      <div className="bg-brand-soft/45 absolute top-[-18%] left-1/2 size-[52rem] -translate-x-1/2 rounded-full blur-[120px]" />
 
       {enabled ? (
         <Canvas
@@ -62,17 +62,10 @@ export function Constellation() {
           frameloop={reduced ? "demand" : visible ? "always" : "never"}
           className="absolute inset-0"
         >
-          <GrainientField animated={!reduced} />
           <ConstellationField />
         </Canvas>
       ) : (
-        <>
-          {/* No WebGL below lg, so the field is a static approximation —
-              visually close, and free on the devices least able to afford a
-              continuously running shader. */}
-          <div className="grainient-static absolute inset-0" />
-          <LatticeBackdrop />
-        </>
+        <LatticeBackdrop />
       )}
     </div>
   );

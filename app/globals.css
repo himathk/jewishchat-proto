@@ -24,12 +24,14 @@
   --color-surface-line: #e9e9e7;
   --color-surface-line-strong: #dadad8;
 
-  /* Gradient field — the hero's drifting background. Read at runtime and
+  /* Gradient field — the site's drifting background. Read at runtime and
      passed to the shader as uniforms, so these stay the single source of
-     truth rather than being duplicated as literals in GLSL. */
+     truth rather than being duplicated as literals in GLSL.
+     --color-field-green is a lightened brand green: it replaced a periwinkle
+     that read as foreign against the rest of the palette. */
   --color-field-cream: #fdf8f0;
   --color-field-mint: #d3ebe2;
-  --color-field-periwinkle: #c6ccf2;
+  --color-field-green: #a9dcc9;
 
   /* State */
   --color-state-success: #1e9783;
@@ -100,14 +102,14 @@
     display: none;
   }
 
-  /* Static stand-in for the hero's gradient field, used wherever the shader
-     doesn't run (below lg). Same three tokens, same upper-left weighting,
-     same downward dissolve — no GPU cost. */
+  /* Static stand-in for the site's gradient field, used wherever the shader
+     doesn't run (below lg). Same three tokens, same upper-left weighting —
+     no GPU cost. */
   .grainient-static {
     background:
       radial-gradient(
         62% 55% at 18% 12%,
-        color-mix(in oklab, var(--color-field-periwinkle) 55%, transparent) 0%,
+        color-mix(in oklab, var(--color-field-green) 55%, transparent) 0%,
         transparent 70%
       ),
       radial-gradient(
@@ -121,20 +123,6 @@
         transparent 80%
       );
     opacity: 0.55;
-    -webkit-mask-image: linear-gradient(
-      to bottom,
-      rgb(0 0 0) 0%,
-      rgb(0 0 0) 35%,
-      rgb(0 0 0 / 0.3) 70%,
-      rgb(0 0 0 / 0) 100%
-    );
-    mask-image: linear-gradient(
-      to bottom,
-      rgb(0 0 0) 0%,
-      rgb(0 0 0) 35%,
-      rgb(0 0 0 / 0.3) 70%,
-      rgb(0 0 0 / 0) 100%
-    );
   }
 
   /* Display type — Bricolage variable axes */

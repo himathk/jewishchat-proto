@@ -5,8 +5,9 @@ import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
 /**
- * The hero's drifting gradient field, rendered as a fullscreen quad inside the
- * constellation's existing R3F canvas rather than as a second WebGL context.
+ * The site's drifting gradient field, rendered as a fullscreen quad. Mounted
+ * once at page level by GradientBackdrop, in a fixed canvas behind all
+ * content, so it carries the whole page rather than just the hero.
  *
  * Tuning notes from the design pass, kept here because the numbers look
  * arbitrary otherwise: saturation and contrast are held low and gamma lifted
@@ -159,15 +160,7 @@ const fragmentShader = /* glsl */ `
     col = (col - 0.5) * uContrast + 0.5;
     col = pow(max(col, 0.0), vec3(1.0 / uGamma));
 
-    // Dissolve the field toward the bottom so it never sits under the
-    // content zones. Done in the shader rather than as a CSS mask on the
-    // wrapper, because the constellation nodes share this canvas and a
-    // wrapper mask would fade them too.
-    float d = 1.0 - vUv.y;
-    float mask = mix(1.0, 0.3, smoothstep(0.35, 0.70, d));
-    mask = mix(mask, 0.0, smoothstep(0.70, 1.0, d));
-
-    gl_FragColor = vec4(clamp(col, 0.0, 1.0), uOpacity * mask);
+    gl_FragColor = vec4(clamp(col, 0.0, 1.0), uOpacity);
   }
 `;
 
@@ -186,7 +179,7 @@ export function GrainientField({ animated }: { animated: boolean }) {
       uResolution: { value: new THREE.Vector2(1, 1) },
       uColor1: { value: readToken("--color-field-cream", "#fdf8f0") },
       uColor2: { value: readToken("--color-field-mint", "#d3ebe2") },
-      uColor3: { value: readToken("--color-field-periwinkle", "#c6ccf2") },
+      uColor3: { value: readToken("--color-field-green", "#a9dcc9") },
       uColorBalance: { value: PARAMS.colorBalance },
       uWarpStrength: { value: PARAMS.warpStrength },
       uWarpFrequency: { value: PARAMS.warpFrequency },

@@ -12,6 +12,7 @@ import { TrustSafety } from "@/components/sections/TrustSafety";
 import { AddGroupBand } from "@/components/sections/AddGroupBand";
 import { Faq } from "@/components/sections/Faq";
 import { Footer } from "@/components/layout/Footer";
+import { GradientBackdrop } from "@/components/layout/GradientBackdrop";
 import {
   buildCategoryListSchema,
   buildItemListSchema,
@@ -31,6 +32,7 @@ export default function Home() {
           ]),
         }}
       />
+      <GradientBackdrop />
       <Header />
       {/* SearchDock is a root-level sibling on purpose: a transformed ancestor
           would become the containing block for its `position: fixed`. */}
